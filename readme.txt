@@ -1,5 +1,5 @@
 === CampTix KDCpay Payment Gateway ===
-Contributors: kdclabs
+Contributors: kdclabs, vachan
 Donate link: http://www.kdclabs.com/donate/
 Tags: camptix, kdcpay
 Requires at least: 3.5
