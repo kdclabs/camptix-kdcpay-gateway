@@ -250,7 +250,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 	
 		$kdcpay_args_array 		= array();
 		foreach ( $payload as $key => $value ) {
-			$kdcpay_args_array[] =  '<input type="text" name="' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '" readonly="readonly" /> = ' . esc_attr( $key ) . '<br/>'."\n";
+			$kdcpay_args_array[] =  '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '" readonly="readonly" />'."\n";
 		}
 
 		echo '<div id="tix">
@@ -258,7 +258,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 						' . implode( '', $kdcpay_args_array ) . '
 						<input type="submit" value="Continue to KDCpay" />
 						<script type="text/javascript">
-							document.getElementById("kdcpay_payment_form_XXX").submit();
+							document.getElementById("kdcpay_payment_form").submit();
 						</script>
 					</form>
 				</div>';
