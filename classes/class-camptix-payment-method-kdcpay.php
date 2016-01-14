@@ -179,33 +179,65 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 			'tix_payment_token' => $payment_token,
 			'tix_payment_method' => 'camptix_kdcpay',
 		), $this->get_tickets_url() );
-		$order = $this->get_order( $payment_token );
 		
-		$merchant_id	= $this->options['merchant_id'];
-		$secret_key 	= $this->options['merchant_key'];
-		$event_name 	= ( $this->camptix_options['event_name'] != "" ) ? $this->camptix_options['event_name'] : get_bloginfo( 'name' );
-		$order_id 		= ( strlen($payment_token) >= 21 ) ? substr($payment_token,0,18) . '_X' : $payment_token;	// Max value 20 Characters [KDCpay]
-		$order_total	= $order['total'];
+		$merchant_id = $this->options['merchant_id'];
+		$secret_key = $this->options['merchant_key'];
+		$event_name = ( $this->camptix_options['event_name'] != "" ) ? $this->camptix_options['event_name'] : get_bloginfo( 'name' );
 
+		$order = $this->get_order( $payment_token );
+		$order_id = ( strlen($payment_token) >= 21 ) ? substr($payment_token,0,18) . '_X' : $payment_token;	// Max value 20 Characters [KDCpay]
+		$order_total = $order['total'];
+
+		$tix_name = $order['items'][0]['name'];
+		$tix_description = $order['items'][0]['description'];
+		$tix_price = $order['items'][0]['price'];
+		$tix_quantity = $order['items'][0]['quantity'];
+
+		$attendees = get_posts(
+			array(
+				'posts_per_page' => 1,
+				'post_type' => 'tix_attendee',
+				'post_status' => array( 'draft', 'pending', 'publish', 'cancel', 'refund', 'failed' ),
+				'meta_query' => array(
+					array(
+						'key' => 'tix_payment_token',
+						'compare' => '=',
+						'value' => $payment_token,
+						'type' => 'CHAR',
+					),
+				),
+			)
+		);
+		$attendee = reset( $attendees );
+		$attendee_pid = $attendee->ID;
+			
+		for ( $x = $attendee_pid; $x < ( $attendee_pid + $tix_quantity ); $x++ ) {
+			$attendee_info[] = array( $x, get_post_meta( $x, 'tix_email', true ), get_post_meta( $x, 'tix_first_name', true ), get_post_meta( $x, 'tix_last_name', true ) ); // array(id,email,first_name,last_name);
+		} 
+		
 		$payload = array(
-			'mid' 			=> $merchant_id,	// Merchant details
-  			'orderId' 		=> $order_id,		// Formated Order ID
-			'returnUrl' 	=> $return_url, 	// Return URL for PG to return
-			'txnType' 		=> '3',				// {0:credit_card,1:debit_card,2:cash_wallet,3:net_banking,4:EMI,5:COD} Default Transaction Tab to be opened
-			'payOption' 	=> '2',				// {0:on_kdcpay,1:button_redirect,2:widget_plugin,3:API} Payment Option selection
-			'currency' 		=> $this->camptix_options['currency'],	// At present only INR support
-			'totalAmount' 	=> $order_total,						// Total amount of the order/cart
-			'ipAddress' 	=> $_SERVER['REMOTE_ADDR'],				// Client's Internet Protcol Address
-			'purpose' 		=> '3',				// {0=service,1=goods,2=auction,3=others} Purpose of the Transaction
+			'mid' => $merchant_id, // Merchant details
+  			'orderId' => $order_id, // Formated Order ID
+			'returnUrl' => $return_url, // Return URL for PG to return
+			'txnType' => '3', // {0:credit_card,1:debit_card,2:cash_wallet,3:net_banking,4:EMI,5:COD} Default Transaction Tab to be opened
+			'buyerEmail' => $attendee_email, // eMail of the Buyer, considering first attendee as Buyer
+			'buyerName' => $attendee_name, // Name of the Buyer, considering first attendee as Buyer
+			'payOption' => '2', // {0:on_kdcpay,1:button_redirect,2:widget_plugin,3:API} Payment Option selection
+			'currency' => $this->camptix_options['currency'], // At present only INR support
+			'totalAmount' => $order_total, // Total amount of the order/cart
+			'ipAddress' => $_SERVER['REMOTE_ADDR'], // Client's Internet Protcol Address
+			'purpose' => '3', // {0=service,1=goods,2=auction,3=others} Purpose of the Transaction
 
 			// For CampTix considering Single and Multiple Tickets as a Single Item | Required to show in the bill on payment page
-			'productDescription'	=> $event_name . ', Order ' . $payment_token,	// Text description-1, at least 1 item is mandatory 
-			'productAmount'			=> $order_total,								// Amount specific to the item-1
-			'productQuantity'		=> '1',											// Quntity specific to the item-1 
+			'productDescription' => $event_name . ' - ' . $tix_name . ' x' . $tix_quantity, // Text description-1, at least 1 item is mandatory 
+			'productAmount' => $order_total,	 // Amount specific to the item-1
+			'productQuantity' => '1', // Quntity specific to the item-1 
 
-			'txnDate' 		=> date( 'Y-m-d', time() + ( 60 * 60 * 5.5 ) ), 		// Date in IST (Indian Standard Time)
-			'udf1' 			=> $payment_token,	// Used by CampTix to associate with the present order (can not use `orderId` as only 20 charachters allowed)
-			'callBack' 		=> '0'				// Allow to remotely inform CampTix via `Notify URL`
+			'txnDate' => date( 'Y-m-d', time() + ( 60 * 60 * 5.5 ) ), // Date in IST (Indian Standard Time)
+			'udf1' => $payment_token, // Used by CampTix to associate with the present order (can not use `orderId` as only 20 charachters allowed)
+			'udf2' => $tix_quantity, // CAMPTIX : TIX->Quantity 
+			'udf3' => json_encode( $attendee_info ), // CAMPTIX : Attendee->INFO
+			'callBack' => '0' // Allow to remotely inform CampTix via `Notify URL`
 		);
 		
 		if ( $this->options['sandbox'] ) {
@@ -218,7 +250,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 	
 		$kdcpay_args_array 		= array();
 		foreach ( $payload as $key => $value ) {
-			$kdcpay_args_array[] = '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '" readonly="readonly" />';
+			$kdcpay_args_array[] =  '<input type="text" name="' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '" readonly="readonly" /> = ' . esc_attr( $key ) . '<br/>'."\n";
 		}
 
 		echo '<div id="tix">
@@ -226,7 +258,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 						' . implode( '', $kdcpay_args_array ) . '
 						<input type="submit" value="Continue to KDCpay" />
 						<script type="text/javascript">
-							document.getElementById("kdcpay_payment_form").submit();
+							document.getElementById("kdcpay_payment_form_XXX").submit();
 						</script>
 					</form>
 				</div>';

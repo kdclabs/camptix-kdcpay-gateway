@@ -3,8 +3,8 @@ Contributors: kdclabs
 Donate link: http://www.kdclabs.com/donate/
 Tags: camptix, kdcpay
 Requires at least: 3.5
-Tested up to: 4.1
-Stable tag: 1.1.0
+Tested up to: 4.4.1
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -23,6 +23,10 @@ Take payments in INR through KDCpay using the CampTix plugin. CampTix plugin nee
 1. Go to `Tickets -> Setup` in your WordPress admin area to set the currency to INR and activate the KDCpay gateway.
 
 == Changelog ==
+
+= 1.2.0 =
+* Special Provision for Camptix Attendee->INFO
+* INR - No-Conflict
 
 = 1.1.0 =
 * Updates made as per WP-Audit
