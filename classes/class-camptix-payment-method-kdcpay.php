@@ -60,7 +60,6 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 			$output['merchant_id'] = $input['merchant_id'];
 		if ( isset( $input['merchant_key'] ) )
 			$output['merchant_key'] = $input['merchant_key'];
-
 		if ( isset( $input['sandbox'] ) )
 			$output['sandbox'] = (bool) $input['sandbox'];
 
@@ -195,25 +194,30 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 
 		$attendees = get_posts(
 			array(
-				'posts_per_page' => 1,
 				'post_type' => 'tix_attendee',
-				'post_status' => array( 'draft', 'pending', 'publish', 'cancel', 'refund', 'failed' ),
+				'post_status' => 'any',
 				'meta_query' => array(
 					array(
 						'key' => 'tix_payment_token',
 						'compare' => '=',
-						'value' => $payment_token,
-						'type' => 'CHAR',
-					),
-				),
+						'value' => $payment_token
+					)
+				)
 			)
 		);
-		$attendee = reset( $attendees );
-		$attendee_pid = $attendee->ID;
-			
-		for ( $x = $attendee_pid; $x < ( $attendee_pid + $tix_quantity ); $x++ ) {
-			$attendee_info[] = array( $x, get_post_meta( $x, 'tix_email', true ), get_post_meta( $x, 'tix_first_name', true ), get_post_meta( $x, 'tix_last_name', true ) ); // array(id,email,first_name,last_name);
-		} 
+		foreach ( $attendees as $attendee ) {
+			$tix_id = get_post( get_post_meta( $attendee->ID, 'tix_ticket_id', true ) );
+			$attendee_info[] = array( 
+					$attendee->ID, 
+					get_post_meta( $attendee->ID, 'tix_email', true ), 
+					get_post_meta( $attendee->ID, 'tix_first_name', true ), 
+					get_post_meta( $attendee->ID, 'tix_last_name', true ),
+					get_post_meta( $attendee->ID, 'tix_ticket_discounted_price', true ),
+					$tix_id->post_title,
+					get_post_meta( $attendee->ID, 'tix_access_token', true ),
+					get_post_meta( $attendee->ID, 'tix_edit_token', true )
+				); // array(id,email,first_name,last_name,tix_amount,tix_name,access_token,edit_token);
+		}
 		
 		$payload = array(
 			'mid' => $merchant_id, // Merchant details
@@ -229,7 +233,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 			'purpose' => '3', // {0=service,1=goods,2=auction,3=others} Purpose of the Transaction
 
 			// For CampTix considering Single and Multiple Tickets as a Single Item | Required to show in the bill on payment page
-			'productDescription' => $event_name . ' - ' . $tix_name . ' x' . $tix_quantity, // Text description-1, at least 1 item is mandatory 
+			'productDescription' => $event_name, // Text description-1, at least 1 item is mandatory 
 			'productAmount' => $order_total,	 // Amount specific to the item-1
 			'productQuantity' => '1', // Quntity specific to the item-1 
 
@@ -237,13 +241,14 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 			'udf1' => $payment_token, // Used by CampTix to associate with the present order (can not use `orderId` as only 20 charachters allowed)
 			'udf2' => $tix_quantity, // CAMPTIX : TIX->Quantity 
 			'udf3' => json_encode( $attendee_info ), // CAMPTIX : Attendee->INFO
+			'app' => 'camptix', // CAMPTIX
 			'callBack' => '0' // Allow to remotely inform CampTix via `Notify URL`
 		);
 		
 		if ( $this->options['sandbox'] ) {
-			$payload['mode'] = '0';
+			$payload['mode'] = '0'; // DEMO
 		} else {
-			$payload['mode'] = '1';
+			$payload['mode'] = '1'; // LIVE
 		}
 
 		$payload['checksum']	= kdcpay_verify_payload( $secret_key, $payload, 'checkout' );
@@ -252,7 +257,6 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 		foreach ( $payload as $key => $value ) {
 			$kdcpay_args_array[] =  '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '" readonly="readonly" />'."\n";
 		}
-
 		echo '<div id="tix">
 					<form action="https://kdcpay.in/secure/transact.php" method="post" id="kdcpay_payment_form">
 						' . implode( '', $kdcpay_args_array ) . '
