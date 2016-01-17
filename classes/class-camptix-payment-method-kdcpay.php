@@ -194,8 +194,10 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 
 		$attendees = get_posts(
 			array(
-				'post_type' => 'tix_attendee',
-				'post_status' => 'any',
+				'post_type'		=> 'tix_attendee',
+				'post_status'	=> 'any',
+				'orderby' 		=> 'ID',
+				'order'			=> 'ASC',
 				'meta_query' => array(
 					array(
 						'key' => 'tix_payment_token',
