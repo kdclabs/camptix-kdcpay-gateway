@@ -30,6 +30,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 	 */
 	function camptix_init() {
 		$this->options = array_merge( array(
+			'payment_url' => 'https://kdcpay.in/secure/transact.php',
 			'merchant_id' => '',
 			'merchant_key' => '',
 			'sandbox' => true
@@ -43,6 +44,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 	 * CampTix fields in the settings section for entering the Payment Credentials
 	 */
 	function payment_settings_fields() {
+		$this->add_settings_field_helper( 'payment_url', 'Payment URL', array( $this, 'field_text' ) );
 		$this->add_settings_field_helper( 'merchant_id', 'Merchant ID', array( $this, 'field_text' ) );
 		$this->add_settings_field_helper( 'merchant_key', 'Merchant Key', array( $this, 'field_text' ) );
 		$this->add_settings_field_helper( 'sandbox', __( 'Sandbox Mode', 'kdcpay' ), array( $this, 'field_yesno' ),
@@ -56,6 +58,8 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 	function validate_options( $input ) {
 		$output = $this->options;
 
+		if ( isset( $input['payment_url'] ) )
+			$output['payment_url'] = $input['payment_url'];
 		if ( isset( $input['merchant_id'] ) )
 			$output['merchant_id'] = $input['merchant_id'];
 		if ( isset( $input['merchant_key'] ) )
@@ -179,6 +183,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 			'tix_payment_method' => 'camptix_kdcpay',
 		), $this->get_tickets_url() );
 		
+		$payment_url = $this->options['payment_url'];
 		$merchant_id = $this->options['merchant_id'];
 		$secret_key = $this->options['merchant_key'];
 		$event_name = ( $this->camptix_options['event_name'] != "" ) ? $this->camptix_options['event_name'] : get_bloginfo( 'name' );
@@ -260,7 +265,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 			$kdcpay_args_array[] =  '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '" readonly="readonly" />'."\n";
 		}
 		echo '<div id="tix">
-					<form action="https://kdcpay.in/secure/transact.php" method="post" id="kdcpay_payment_form">
+					<form action="'.$payment_url.'" method="post" id="kdcpay_payment_form">
 						' . implode( '', $kdcpay_args_array ) . '
 						<input type="submit" value="Continue to KDCpay" />
 						<script type="text/javascript">
