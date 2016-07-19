@@ -265,7 +265,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 			$kdcpay_args_array[] =  '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '" readonly="readonly" />'."\n";
 		}
 		echo '<div id="tix">
-					<form action="'.$payment_url.'" method="post" id="kdcpay_payment_form">
+					<form action="'.esc_url($payment_url).'" method="post" id="kdcpay_payment_form">
 						' . implode( '', $kdcpay_args_array ) . '
 						<input type="submit" value="Continue to KDCpay" />
 						<script type="text/javascript">
