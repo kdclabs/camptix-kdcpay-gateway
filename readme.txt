@@ -3,8 +3,8 @@ Contributors: kdclabs, vachan
 Donate link: http://www.kdclabs.com/donate/
 Tags: camptix, kdcpay
 Requires at least: 3.5
-Tested up to: 4.5.3
-Stable tag: 1.3.1
+Tested up to: 4.6
+Stable tag: 1.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,10 +19,22 @@ Take payments in INR through KDCpay using the CampTix plugin. CampTix plugin nee
 == Installation ==
 
 1. Upload `camptix-kdcpay` to the `/wp-content/plugins/` directory
-1. Activate the plugin through the 'Plugins' menu in WordPress
-1. Go to `Tickets -> Setup` in your WordPress admin area to set the currency to INR and activate the KDCpay gateway.
+2. Activate the plugin through the 'Plugins' menu in WordPress
+3. Go to `Tickets -> Setup` in your WordPress admin area to set the currency to INR and activate the KDCpay gateway.
+
+= Getting Mobile Filed ID =
+1. Edit/Create ticket which will use the KDCpay Gateway.
+2. Add a compulsory `Queston` as `Text input` and Tick `Required`.
+3. Update/Publish the Ticket.
+4. View Source or inspect the Ticket page in the frontend in the second step (attendee info form).
+5. Note the ID mentioned in the `<input name="tix_attendee_questions[1][#]"`, where # = Mobile Field ID.
+6. Visit: WP Dashbard > Camptix > Setup > Payments > KDCpay > Mobile Field ID > Enter the above noted ID.
 
 == Changelog ==
+
+= 1.3.2 =
+* Added: Attendee Info Field `mobile`
+* Added: (Readme) Instructions for Mobile Field ID
 
 = 1.3.1 =
 * Updated: Payment URL with `esc_url()`
