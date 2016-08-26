@@ -33,7 +33,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 			'payment_url' => 'https://kdcpay.in/secure/transact.php',
 			'merchant_id' => '',
 			'merchant_key' => '',
-			'attendee_mobile' => '',
+			'attendee_mobile_id' => '',
 			'sandbox' => true
 		), $this->get_payment_options() );
 
@@ -48,7 +48,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 		$this->add_settings_field_helper( 'payment_url', 'Payment URL', array( $this, 'field_text' ) );
 		$this->add_settings_field_helper( 'merchant_id', 'Merchant ID', array( $this, 'field_text' ) );
 		$this->add_settings_field_helper( 'merchant_key', 'Merchant Key', array( $this, 'field_text' ) );
-		$this->add_settings_field_helper( 'attendee_mobile', __( 'Mobile Field ID', 'kdcpay' ), array( $this, 'field_text' ), __( "To obtain the ID, view the form's source code and look for input name: `tix_attendee_questions[1][###]` correspondng to your Mobile field question. ### = Filed ID", 'kdcpay') );
+		$this->add_settings_field_helper( 'attendee_mobile_id', __( 'Mobile Field ID', 'kdcpay' ), array( $this, 'field_text' ), __( "To obtain the ID, view the form's source code and look for input name: `tix_attendee_questions[1][###]` correspondng to your Mobile field question. ### = Filed ID", 'kdcpay') );
 		$this->add_settings_field_helper( 'sandbox', __( 'Sandbox Mode', 'kdcpay' ), array( $this, 'field_yesno' ),
 			__( "The KDCpay Sandbox is a way to test payments without using real accounts and transactions. When enabled it will use sandbox merchant details instead of the ones defined above.", 'kdcpay' )
 		);
@@ -66,8 +66,8 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 			$output['merchant_id'] = $input['merchant_id'];
 		if ( isset( $input['merchant_key'] ) )
 			$output['merchant_key'] = $input['merchant_key'];
-		if ( isset( $input['attendee_mobile'] ) )
-			$output['attendee_mobile'] = $input['attendee_mobile'];
+		if ( isset( $input['attendee_mobile_id'] ) )
+			$output['attendee_mobile_id'] = $input['attendee_mobile_id'];
 		if ( isset( $input['sandbox'] ) )
 			$output['sandbox'] = (bool) $input['sandbox'];
 
@@ -190,7 +190,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 		$payment_url = $this->options['payment_url'];
 		$merchant_id = $this->options['merchant_id'];
 		$secret_key = $this->options['merchant_key'];
-		$attendee_mobile = $this->options['attendee_mobile'];
+		$attendee_mobile_id = $this->options['attendee_mobile_id'];
 		$event_name = ( $this->camptix_options['event_name'] != "" ) ? $this->camptix_options['event_name'] : get_bloginfo( 'name' );
 
 		$order = $this->get_order( $payment_token );
@@ -222,8 +222,8 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 			
 			// Get Mobile Number
 			$attendee_questions = get_post_meta( $attendee->ID, 'tix_questions', true ); // Array of Attendee Questons
-			if( $attendee_mobile != '' ) { // Check if Setup for Mobile is set?
-				$attendee_info_mobile = $attendee_questions[$attendee_mobile];
+			if( $attendee_mobile_id != '' ) { // Check if Setup for Mobile is set?
+				$attendee_info_mobile = $attendee_questions[$attendee_mobile_id];
 			} else {
 				$attendee_info_mobile = '';
 			}
@@ -238,7 +238,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 					get_post_meta( $attendee->ID, 'tix_access_token', true ),
 					get_post_meta( $attendee->ID, 'tix_edit_token', true ),
 					$attendee_info_mobile
-				); // array(id,email,first_name,last_name,tix_amount,tix_name,access_token,edit_token,mobile);
+				); // array(0=id,1=email,2=first_name,3=last_name,4=tix_amount,5=tix_name,6=access_token,7=edit_token,8=mobile);
 		}
 		
 		$payload = array(
@@ -246,8 +246,8 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
   			'orderId' => $order_id, // Formated Order ID
 			'returnUrl' => $return_url, // Return URL for PG to return
 			'txnType' => '3', // {0:credit_card,1:debit_card,2:cash_wallet,3:net_banking,4:EMI,5:COD} Default Transaction Tab to be opened
-			'buyerEmail' => $attendee_email, // eMail of the Buyer, considering first attendee as Buyer
-			'buyerName' => $attendee_name, // Name of the Buyer, considering first attendee as Buyer
+			'buyerEmail' => $attendee_info[1], // eMail of the Buyer, considering first attendee as Buyer
+			'buyerName' => $attendee_info[2].' '.$attendee_info[3], // Name of the Buyer, considering first attendee as Buyer
 			'payOption' => '2', // {0:on_kdcpay,1:button_redirect,2:widget_plugin,3:API} Payment Option selection
 			'currency' => $this->camptix_options['currency'], // At present only INR support
 			'totalAmount' => $order_total, // Total amount of the order/cart

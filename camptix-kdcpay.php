@@ -5,7 +5,7 @@
  * Description: KDCpay Payment Gateway for CampTix
  * Author: _KDC-Labs
  * Author URI: http://www.kdclabs.com/
- * Version: 1.3.2
+ * Version: 1.3.3
  * License: GPLv2 or later
  * Text Doomain: kdcpay
  */
