@@ -17,7 +17,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 	public $id = 'camptix_kdcpay';
 	public $name = 'KDCpay';
 	public $description = 'CampTix payment methods for Indian payment gateway KDCpay.';
-	public $supported_currencies = array( 'INR' );
+	public $supported_currencies = array( 'INR', 'LKR', 'USD' );
 
 	/**
 	 * We can have an array to store our options.
@@ -30,10 +30,11 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 	 */
 	function camptix_init() {
 		$this->options = array_merge( array(
-			'payment_url' => 'https://kdcpay.in/secure/transact.php',
+			'payment_url' => 'https://eduvents.co/camptix/',
 			'merchant_id' => '',
 			'merchant_key' => '',
 			'attendee_mobile_id' => '',
+			'iframe' => true,
 			'sandbox' => true
 		), $this->get_payment_options() );
 
@@ -49,6 +50,9 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 		$this->add_settings_field_helper( 'merchant_id', 'Merchant ID', array( $this, 'field_text' ) );
 		$this->add_settings_field_helper( 'merchant_key', 'Merchant Key', array( $this, 'field_text' ) );
 		$this->add_settings_field_helper( 'attendee_mobile_id', __( 'Mobile Field ID', 'kdcpay' ), array( $this, 'field_text' ), __( "To obtain the ID, view the form's source code and look for input name: `tix_attendee_questions[1][###]` correspondng to your Mobile field question. ### = Filed ID", 'kdcpay') );
+		$this->add_settings_field_helper( 'iframe', __( 'Show in iFrame', 'kdcpay' ), array( $this, 'field_yesno' ),
+			__( "Yes = The payment form will loaded on next page | No = Page will be Redirected.", 'kdcpay' )
+		);
 		$this->add_settings_field_helper( 'sandbox', __( 'Sandbox Mode', 'kdcpay' ), array( $this, 'field_yesno' ),
 			__( "The KDCpay Sandbox is a way to test payments without using real accounts and transactions. When enabled it will use sandbox merchant details instead of the ones defined above.", 'kdcpay' )
 		);
@@ -68,6 +72,8 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 			$output['merchant_key'] = $input['merchant_key'];
 		if ( isset( $input['attendee_mobile_id'] ) )
 			$output['attendee_mobile_id'] = $input['attendee_mobile_id'];
+		if ( isset( $input['iframe'] ) )
+			$output['iframe'] = (bool) $input['iframe'];
 		if ( isset( $input['sandbox'] ) )
 			$output['sandbox'] = (bool) $input['sandbox'];
 
@@ -108,7 +114,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 
 		$attendees = get_posts(
 			array(
-				'posts_per_page' => 1,
+				'posts_per_page' => -1,
 				'post_type' => 'tix_attendee',
 				'post_status' => array( 'draft', 'pending', 'publish', 'cancel', 'refund', 'failed' ),
 				'meta_query' => array(
@@ -140,15 +146,21 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 			$payload 		= $_REQUEST;
 			$checkhash		= kdcpay_verify_payload( $secret_key, $payload, 'return' );
 			if( $payload['checksum'] == $checkhash ){
-				$status = strtolower( $payload['status'] );
-				if( $status == "success" ){
-					$this->log( 'SUCCESS Txn. paidBy='.$payload['paidBy'].' | trackId='. $payload['trackId'].' | TPSL='.$payload['pgId'].' | BankId='.$payload['bankId'] );
+				$status = strtolower( $payload['status'] ); // success / failure / aborted / invalid
+ 				if( $status == "success" ){
+					$this->log( 'SUCCESS Txn. paidBy='.$payload['paidBy'].' | trackId='. $payload['trackId'].' | IPG='.$payload['pgId'].' | BankId='.$payload['bankId'] );
 					$this->payment_result( $payment_token, CampTix_Plugin::PAYMENT_STATUS_COMPLETED );
-				} else if( $status == "pending" ){
-					$this->log( 'PENDING Txn. trackId='. $payload['trackId'].' | TPSL='.$payload['pgId'].' | BankId='.$payload['bankId'] );
+				} else if( $status == "aborted" ){
+					$this->log( 'ABORTED Txn. trackId='. $payload['trackId'].' | IPG='.$payload['pgId'].' | BankId='.$payload['bankId'] );
+					$this->payment_result( $payment_token, CampTix_Plugin::PAYMENT_STATUS_CANCELLED );
+				} else if( $status == "failure" ){
+					$this->log( 'FAILED Txn. Error='.$payload['responseCode'].' | Description='.$payload['responseDescription'].' | trackId='. $payload['trackId'].' |  IPG='.$payload['pgId'].' | BankId='.$payload['bankId'] );
+					$this->payment_result( $payment_token, CampTix_Plugin::PAYMENT_STATUS_FAILED );
+				} else if( $status == "pending" ){ // For compatibility with v1.3.3
+					$this->log( 'PENDING Txn. trackId='. $payload['trackId'].' | IPG='.$payload['pgId'].' | BankId='.$payload['bankId'] );
 					$this->payment_result( $payment_token, CampTix_Plugin::PAYMENT_STATUS_PENDING );
-				} else if( $status == "fail" ){
-					$this->log( 'FAILED Txn. Error='.$payload['responseCode'].' | Description='.$payload['responseDescription'].' | trackId='. $payload['trackId'].' |  TPSL='.$payload['pgId'].' | BankId='.$payload['bankId'] );
+				} else if( $status == "fail" ){ // For compatibility with v1.3.3
+					$this->log( 'FAILED Txn. Error='.$payload['responseCode'].' | Description='.$payload['responseDescription'].' | trackId='. $payload['trackId'].' |  IPG='.$payload['pgId'].' | BankId='.$payload['bankId'] );
 					$this->payment_result( $payment_token, CampTix_Plugin::PAYMENT_STATUS_FAILED );
 				}
 			}else{
@@ -204,6 +216,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 
 		$attendees = get_posts(
 			array(
+				'posts_per_page' => -1,
 				'post_type'		=> 'tix_attendee',
 				'post_status'	=> 'any',
 				'orderby' 		=> 'ID',
@@ -246,8 +259,8 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
   			'orderId' => $order_id, // Formated Order ID
 			'returnUrl' => $return_url, // Return URL for PG to return
 			'txnType' => '3', // {0:credit_card,1:debit_card,2:cash_wallet,3:net_banking,4:EMI,5:COD} Default Transaction Tab to be opened
-			'buyerEmail' => $attendee_info[1], // eMail of the Buyer, considering first attendee as Buyer
-			'buyerName' => $attendee_info[2].' '.$attendee_info[3], // Name of the Buyer, considering first attendee as Buyer
+			'buyerEmail' => $attendee_info[0][1], // eMail of the Buyer, considering first attendee as Buyer
+			'buyerName' => $attendee_inf[0][2].' '.$attendee_info[0][3], // Name of the Buyer, considering first attendee as Buyer
 			'payOption' => '2', // {0:on_kdcpay,1:button_redirect,2:widget_plugin,3:API} Payment Option selection
 			'currency' => $this->camptix_options['currency'], // At present only INR support
 			'totalAmount' => $order_total, // Total amount of the order/cart
@@ -279,16 +292,40 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 		foreach ( $payload as $key => $value ) {
 			$kdcpay_args_array[] =  '<input type="hidden" name="' . esc_attr( $key ) . '" value="' . esc_attr( $value ) . '" readonly="readonly" />'."\n";
 		}
-		echo '<div id="tix">
-					<form action="'.esc_url($payment_url).'" method="post" id="kdcpay_payment_form">
-						' . implode( '', $kdcpay_args_array ) . '
-						<input type="submit" value="Continue to KDCpay" />
-						<script type="text/javascript">
-							document.getElementById("kdcpay_payment_form").submit();
-						</script>
-					</form>
-				</div>';
-		return;
+
+		if ( $this->options['iframe'] ) {
+			
+			$kdcpay_checkout_button = '';
+			$kdcpay_checkout_target = ' target="kdcpay_payment_frame"';
+			$kdcpay_checkout_iframe = '<iframe src="about:blank" id="kdcpay_payment_frame" name="kdcpay_payment_frame" style="width:100%;" height="650" frameborder="0" scrolling="No"></iframe>
+				<script type="text/javascript">
+					jQuery(document).ready(function(){
+						 window.addEventListener(\'message\', function(e) {
+							 jQuery("#kdcpay_payment_frame").css("height",e.data[\'newHeight\']+\'px\'); 	 
+						 }, false);
+					});
+				</script>';
+
+		}else{
+
+			$kdcpay_checkout_target = '';
+			$kdcpay_checkout_button = '<p>Redirecting you to the Payment Page</p><input type="submit" value="Continue Now!" />';
+			$kdcpay_checkout_iframe = '';
+			
+		}
+		
+		$kdcpay_checkout = '<div id="tix">
+			<form action="' . esc_url($payment_url) . '" method="post" id="kdcpay_payment_form"' . $kdcpay_checkout_target . '>
+				' . implode( '', $kdcpay_args_array ) . '
+				' . $kdcpay_checkout_button . '
+			</form>
+			' . $kdcpay_checkout_iframe . '
+			<script type="text/javascript">
+				document.getElementById("kdcpay_payment_form").submit();
+			</script>
+		</div>';
+		
+		return $kdcpay_checkout;
 	}
 
 	/**
@@ -372,5 +409,3 @@ function kdcpay_sanitized_url( $param ){
 function kdcpay_calculate_checksum( $payload, $secret_key ) {
 	return hash_hmac( 'sha256', $payload, $secret_key );
 }
-
-?>

@@ -3,8 +3,8 @@ Contributors: kdclabs, vachan
 Donate link: http://www.kdclabs.com/donate/
 Tags: camptix, kdcpay
 Requires at least: 3.5
-Tested up to: 4.6
-Stable tag: 1.3.3
+Tested up to: 4.8.0
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,6 +31,11 @@ Take payments in INR through KDCpay using the CampTix plugin. CampTix plugin nee
 6. Visit: WP Dashbard > Camptix > Setup > Payments > KDCpay > Mobile Field ID > Enter the above noted ID.
 
 == Changelog ==
+
+= 1.4.0 =
+* Added: Curreny support for `USD` & `LKR`.
+* Added: iFrame checkout.
+* Fixed: `buyerEmail` and `buyerName` (as first attendee).
 
 = 1.3.3 =
 * Updated: `buyerEmal` and `buyerName`

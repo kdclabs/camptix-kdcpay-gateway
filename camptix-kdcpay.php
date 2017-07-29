@@ -5,7 +5,7 @@
  * Description: KDCpay Payment Gateway for CampTix
  * Author: _KDC-Labs
  * Author URI: http://www.kdclabs.com/
- * Version: 1.3.3
+ * Version: 1.4.0
  * License: GPLv2 or later
  * Text Doomain: kdcpay
  */
@@ -18,7 +18,13 @@ function camptix_kdcpay_add_inr_currency( $currencies ) {
 	if ( ! $currencies['INR'] ) {
 		$currencies['INR'] = array(
 			'label' => __( 'Indian Rupees', 'kdcpay' ),
-			'format' => 'Rs. %s',
+			'format' => '₹ %s',
+		);
+	}
+	if ( ! $currencies['LKR'] ) {
+		$currencies['LKR'] = array(
+			'label' => __( 'Sri Lankan Rupees', 'kdcpay' ),
+			'format' => 'රු %s',
 		);
 	}
 	return $currencies;
