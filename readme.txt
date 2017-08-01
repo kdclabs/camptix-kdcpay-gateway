@@ -4,7 +4,7 @@ Donate link: http://www.kdclabs.com/donate/
 Tags: camptix, kdcpay
 Requires at least: 3.5
 Tested up to: 4.8.0
-Stable tag: 1.4.2
+Stable tag: 1.4.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,7 +32,10 @@ Take payments in INR through KDCpay using the CampTix plugin. CampTix plugin nee
 
 == Changelog ==
 
-= 1.4.1 =
+= 1.4.3 =
+* Fixed: `iframe` height to accomodate all payment options.
+
+= 1.4.2 =
 * Fixed: `iframe` typo.
 
 = 1.4.1 =
