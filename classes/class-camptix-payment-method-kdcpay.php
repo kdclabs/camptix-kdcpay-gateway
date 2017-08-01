@@ -281,7 +281,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 			'callBack' => '0' // Allow to remotely inform CampTix via `Notify URL`
 		);
 		
-		if ( $this->options['ifame'] ) {
+		if ( $this->options['iframe'] ) {
 			$payload['display'] = 'iframe';
 		} else {
 			$payload['display'] = 'redirect';
