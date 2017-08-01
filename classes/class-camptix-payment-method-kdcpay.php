@@ -304,7 +304,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 			
 			$kdcpay_checkout_button = '';
 			$kdcpay_checkout_target = ' target="kdcpay_payment_frame"';
-			$kdcpay_checkout_iframe = '<iframe src="about:blank" id="kdcpay_payment_frame" name="kdcpay_payment_frame" style="width:100%;" height="820" frameborder="0" scrolling="No"></iframe>
+			$kdcpay_checkout_iframe = '<iframe src="about:blank" id="kdcpay_payment_frame" name="kdcpay_payment_frame" style="width:100%;" height="850" frameborder="0" scrolling="No"></iframe>
 				<script type="text/javascript">
 					jQuery(document).ready(function(){
 						 window.addEventListener(\'message\', function(e) {
