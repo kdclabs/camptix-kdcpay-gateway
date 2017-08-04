@@ -1,4 +1,4 @@
-=== CampTix KDCpay Payment Gateway ===
+=== CampTix KDCpay Payments ===
 Contributors: kdclabs, vachan
 Donate link: http://www.kdclabs.com/donate/
 Tags: camptix, kdcpay
@@ -12,18 +12,18 @@ KDCpay Payment Gateway for CampTix plugin
 
 == Description ==
 
-Indian KDCpay Payment Gateway for the CampTix plugin.
+Indian KDCpay Payment Platform for the CampTix plugin.
 
-Take payments in INR through KDCpay using the CampTix plugin. CampTix plugin needs to be installed and activated for the KDCpay payment gateway to work.
+Take payments in INR through KDCpay using the CampTix plugin. CampTix plugin needs to be installed and activated for the KDCpay payment platform to work.
 
 == Installation ==
 
 1. Upload `camptix-kdcpay` to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Go to `Tickets -> Setup` in your WordPress admin area to set the currency to INR and activate the KDCpay gateway.
+3. Go to `Tickets -> Setup` in your WordPress admin area to set the currency to INR and enable the KDCpay.
 
 = Getting Mobile Filed ID =
-1. Edit/Create ticket which will use the KDCpay Gateway.
+1. Edit/Create ticket which will use the KDCpay Platform.
 2. Add a compulsory `Queston` as `Text input` and Tick `Required`.
 3. Update/Publish the Ticket.
 4. View Source or inspect the Ticket page in the frontend in the second step (attendee info form).
