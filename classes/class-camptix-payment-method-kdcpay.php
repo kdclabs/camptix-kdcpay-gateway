@@ -277,7 +277,6 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 			'udf2' => $tix_quantity, // CAMPTIX : TIX->Quantity 
 			'udf3' => json_encode( $attendee_info ), // CAMPTIX : Attendee->INFO
 			'app' => 'camptix', // CAMPTIX
-			'display' => 'camptix', // CAMPTIX
 			'callBack' => '0' // Allow to remotely inform CampTix via `Notify URL`
 		);
 		
