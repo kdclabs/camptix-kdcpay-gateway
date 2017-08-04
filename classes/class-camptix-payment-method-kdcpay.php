@@ -260,7 +260,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 			'returnUrl' => $return_url, // Return URL for PG to return
 			'txnType' => '3', // {0:credit_card,1:debit_card,2:cash_wallet,3:net_banking,4:EMI,5:COD} Default Transaction Tab to be opened
 			'buyerEmail' => $attendee_info[0][1], // eMail of the Buyer, considering first attendee as Buyer
-			'buyerName' => $attendee_inf[0][2].' '.$attendee_info[0][3], // Name of the Buyer, considering first attendee as Buyer
+			'buyerName' => $attendee_info[0][2].' '.$attendee_info[0][3], // Name of the Buyer, considering first attendee as Buyer
 			'payOption' => '2', // {0:on_kdcpay,1:button_redirect,2:widget_plugin,3:API} Payment Option selection
 			'currency' => $this->camptix_options['currency'], // At present only INR support
 			'totalAmount' => $order_total, // Total amount of the order/cart
@@ -277,7 +277,6 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 			'udf2' => $tix_quantity, // CAMPTIX : TIX->Quantity 
 			'udf3' => json_encode( $attendee_info ), // CAMPTIX : Attendee->INFO
 			'app' => 'camptix', // CAMPTIX
-			'dispaly' => 'camptix', // CAMPTIX
 			'callBack' => '0' // Allow to remotely inform CampTix via `Notify URL`
 		);
 		
