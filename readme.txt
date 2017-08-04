@@ -8,13 +8,13 @@ Stable tag: 1.4.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-KDCpay Payment Gateway for CampTix plugin
+KDCpay Payment Platform for CampTix plugin
 
 == Description ==
 
-Indian KDCpay Payment Platform for the CampTix plugin.
+KDCpay Payment Platform for the CampTix plugin.
 
-Take payments in INR through KDCpay using the CampTix plugin. CampTix plugin needs to be installed and activated for the KDCpay payment platform to work.
+Take payments in INR, LKR or USD through KDCpay using the CampTix plugin. CampTix plugin needs to be installed and activated for the KDCpay payment platform to work.
 
 == Installation ==
 
