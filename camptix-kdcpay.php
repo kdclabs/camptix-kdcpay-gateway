@@ -15,13 +15,13 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 // Add INR currency
 add_filter( 'camptix_currencies', 'camptix_kdcpay_add_inr_currency' );
 function camptix_kdcpay_add_inr_currency( $currencies ) {
-	if ( ! $currencies['INR'] ) {
+	if ( ! array_key_exists('INR',$currencies ) ) {
 		$currencies['INR'] = array(
 			'label' => __( 'Indian Rupees', 'kdcpay' ),
 			'format' => '₹ %s',
 		);
 	}
-	if ( ! $currencies['LKR'] ) {
+	if ( ! array_key_exists('LKR',$currencies ) ) {
 		$currencies['LKR'] = array(
 			'label' => __( 'Sri Lankan Rupees', 'kdcpay' ),
 			'format' => 'රු %s',
