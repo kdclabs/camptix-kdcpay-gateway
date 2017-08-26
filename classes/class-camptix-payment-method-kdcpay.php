@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
 
 class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 	public $id = 'camptix_kdcpay';
-	public $name = 'camptix-kdcpay';
+	public $name = 'KDCpay';
 	public $description = 'CampTix payment methods for Indian payment gateway KDCpay.';
 	public $supported_currencies = array( 'INR', 'LKR', 'USD' );
 
