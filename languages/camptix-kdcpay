@@ -1,0 +1,97 @@
+#, fuzzy
+msgid ""
+msgstr ""
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Project-Id-Version: CampTix KDCpay Payment Gateway\n"
+"POT-Creation-Date: 2017-08-26 19:35+0530\n"
+"PO-Revision-Date: 2017-08-26 19:35+0530\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.7\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-WPHeader: camptix-kdcpay.php\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: *.js\n"
+
+#: camptix-kdcpay.php:28
+msgid "Indian Rupees"
+msgstr ""
+
+#: camptix-kdcpay.php:34
+msgid "Sri Lankan Rupees"
+msgstr ""
+
+#: classes/class-camptix-payment-method-kdcpay.php:48
+msgid "Payment URL"
+msgstr ""
+
+#: classes/class-camptix-payment-method-kdcpay.php:49
+msgid "Merchant ID"
+msgstr ""
+
+#: classes/class-camptix-payment-method-kdcpay.php:50
+msgid "Merchant Key"
+msgstr ""
+
+#: classes/class-camptix-payment-method-kdcpay.php:51
+msgid "Mobile Field ID"
+msgstr ""
+
+#: classes/class-camptix-payment-method-kdcpay.php:51
+msgid ""
+"To obtain the ID, view the form's source code and look for input name: "
+"`tix_attendee_questions[1][###]` correspondng to your Mobile field question. "
+"### = Filed ID"
+msgstr ""
+
+#: classes/class-camptix-payment-method-kdcpay.php:52
+msgid "Show in iFrame"
+msgstr ""
+
+#: classes/class-camptix-payment-method-kdcpay.php:53
+msgid ""
+"Yes = The payment form will loaded on next page | No = Page will be "
+"Redirected."
+msgstr ""
+
+#: classes/class-camptix-payment-method-kdcpay.php:55
+msgid "Sandbox Mode"
+msgstr ""
+
+#: classes/class-camptix-payment-method-kdcpay.php:56
+msgid ""
+"The KDCpay Sandbox is a way to test payments without using real accounts and "
+"transactions. When enabled it will use sandbox merchant details instead of "
+"the ones defined above."
+msgstr ""
+
+#: classes/class-camptix-payment-method-kdcpay.php:183
+msgid "The selected currency is not supported by this payment method."
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "CampTix KDCpay Payment Gateway"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "http://www.kdclabs.com/tag/camptix-kdcpay/"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid "KDCpay Payment Gateway for CampTix"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "_KDC-Labs"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "http://www.kdclabs.com/"
+msgstr ""
