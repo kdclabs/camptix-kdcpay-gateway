@@ -7,23 +7,31 @@
  * Author URI: http://www.kdclabs.com/
  * Version: 1.4.5
  * License: GPLv2 or later
- * Text Doomain: kdcpay
+ * Text Domain: camptix-kdcpay
+ * Domain Path: /languages
+ * GitHub Plugin URI: https://github.com/kdclabs/camptix-kdcpay-gateway
  */
 
-if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly
+if ( ! defined( 'ABSPATH' ) ) exit; // Exit if accessed directly.
 
-// Add INR currency
+// Load Plugin Text Domain.
+add_action( 'init', 'camptix_kdcpay_load_textdomain' );
+function camptix_kdcpay_load_textdomain() {
+	load_plugin_textdomain( 'camptix-kdcpay', false, dirname( plugin_basename( __FILE__ ) ) . '/languages' );
+}
+
+// Add INR currency.
 add_filter( 'camptix_currencies', 'camptix_kdcpay_add_inr_currency' );
 function camptix_kdcpay_add_inr_currency( $currencies ) {
-	if ( ! $currencies['INR'] ) {
+	if ( ! array_key_exists( 'INR',$currencies ) ) {
 		$currencies['INR'] = array(
-			'label' => __( 'Indian Rupees', 'kdcpay' ),
+			'label' => __( 'Indian Rupees', 'camptix-kdcpay' ),
 			'format' => '₹ %s',
 		);
 	}
-	if ( ! $currencies['LKR'] ) {
+	if ( ! array_key_exists( 'LKR',$currencies ) ) {
 		$currencies['LKR'] = array(
-			'label' => __( 'Sri Lankan Rupees', 'kdcpay' ),
+			'label' => __( 'Sri Lankan Rupees', 'camptix-kdcpay' ),
 			'format' => 'රු %s',
 		);
 	}
@@ -37,5 +45,3 @@ function camptix_kdcpay_load_payment_method() {
 		require_once plugin_dir_path( __FILE__ ) . 'classes/class-camptix-payment-method-kdcpay.php';
 	camptix_register_addon( 'CampTix_Payment_Method_KDCpay' );
 }
-
-?>
