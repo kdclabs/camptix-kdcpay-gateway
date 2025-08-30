@@ -241,7 +241,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 			$attendee_phone = get_post_meta( $attendee->ID, 'tix_email', true );
 			// Get Mobile Number
 			if( $attendee_phone != '' ) {
-				$attendee_info_mobile = 
+				$attendee_info_mobile = $attendee_phone;
 			} elseif ( $attendee_mobile_id != '' ) { // Check if Setup for Mobile is set?
 				$attendee_info_mobile = $attendee_phone;
 			} else {
