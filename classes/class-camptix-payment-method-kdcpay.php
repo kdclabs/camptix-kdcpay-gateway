@@ -33,6 +33,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 			'merchant_id' => '',
 			'merchant_key' => '',
 			'attendee_mobile_id' => '',
+			'attendee_comms_pref' => '',
 			'iframe' => true,
 			'sandbox' => true
 		), $this->get_payment_options() );
@@ -49,6 +50,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 		$this->add_settings_field_helper( 'merchant_id', __( 'Merchant ID', 'camptix-kdcpay' ), array( $this, 'field_text' ) );
 		$this->add_settings_field_helper( 'merchant_key', __( 'Merchant Key', 'camptix-kdcpay' ), array( $this, 'field_text' ) );
 		$this->add_settings_field_helper( 'attendee_mobile_id', __( 'Mobile Field ID', 'camptix-kdcpay' ), array( $this, 'field_text' ), __( "To obtain the ID, view the form's source code and look for input name: `tix_attendee_questions[1][###]` correspondng to your Mobile field question. ### = Filed ID", 'camptix-kdcpay') );
+		$this->add_settings_field_helper( 'attendee_comms_pref', __( 'COmmunication Preferece', 'camptix-kdcpay' ), array( $this, 'field_text' ), __( "To obtain the ID, view the form's source code and look for input name: `tix_attendee_questions[1][###]` correspondng to your Communication field question. ### = Filed ID", 'camptix-kdcpay') );
 		$this->add_settings_field_helper( 'iframe', __( 'Show in iFrame', 'camptix-kdcpay' ), array( $this, 'field_yesno' ),
 			__( "Yes = The payment form will loaded on next page | No = Page will be Redirected.", 'camptix-kdcpay' )
 		);
@@ -71,6 +73,8 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 			$output['merchant_key'] = $input['merchant_key'];
 		if ( isset( $input['attendee_mobile_id'] ) )
 			$output['attendee_mobile_id'] = $input['attendee_mobile_id'];
+		if ( isset( $input['attendee_comms_pref'] ) )
+			$output['attendee_comms_pref'] = $input['attendee_comms_pref'];
 		if ( isset( $input['iframe'] ) )
 			$output['iframe'] = (bool) $input['iframe'];
 		if ( isset( $input['sandbox'] ) )
@@ -232,12 +236,23 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 		foreach ( $attendees as $attendee ) {
 			$tix_id = get_post( get_post_meta( $attendee->ID, 'tix_ticket_id', true ) );
 
-			// Get Mobile Number
 			$attendee_questions = get_post_meta( $attendee->ID, 'tix_questions', true ); // Array of Attendee Questons
-			if( $attendee_mobile_id != '' ) { // Check if Setup for Mobile is set?
-				$attendee_info_mobile = $attendee_questions[$attendee_mobile_id];
+
+			$attendee_phone = get_post_meta( $attendee->ID, 'tix_email', true );
+			// Get Mobile Number
+			if( $attendee_phone != '' ) {
+				$attendee_info_mobile = 
+			} elseif ( $attendee_mobile_id != '' ) { // Check if Setup for Mobile is set?
+				$attendee_info_mobile = $attendee_phone;
 			} else {
 				$attendee_info_mobile = '';
+			}
+			
+			// Get Communication Preference
+			if( $attendee_comms_pref != '' ) { // Check if Setup for Mobile is set?
+				$attendee_info_comms = $attendee_questions[$attendee_comms_pref];
+			} else {
+				$attendee_info_comms = '';
 			}
 
 			$attendee_info[] = array(
@@ -249,8 +264,9 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method {
 					$tix_id->post_title,
 					get_post_meta( $attendee->ID, 'tix_access_token', true ),
 					get_post_meta( $attendee->ID, 'tix_edit_token', true ),
-					$attendee_info_mobile
-				); // array(0=id,1=email,2=first_name,3=last_name,4=tix_amount,5=tix_name,6=access_token,7=edit_token,8=mobile);
+					$attendee_info_mobile,
+					$attendee_info_comms
+				); // array(0=id,1=email,2=first_name,3=last_name,4=tix_amount,5=tix_name,6=access_token,7=edit_token,8=mobile,9=comms_pref);
 		}
 
 		$payload = array(
