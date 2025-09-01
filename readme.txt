@@ -4,7 +4,7 @@ Donate link: http://www.kdclabs.com/donate/
 Tags: camptix, kdcpay
 Requires at least: 3.5
 Tested up to: 6.8.2
-Stable tag: 1.6.0
+Stable tag: 1.6.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -32,7 +32,13 @@ Take payments in INR, LKR or USD through KDCpay using the CampTix plugin. CampTi
 
 == Changelog ==
 
+= 1.6.1 (2025-09-01) =
+* Added: Country field.
+* Fixed: Typos & VSCode formting.
+* Fixed: Comms Pref assignement.
+
 = 1.6.0 (2025-08-30) =
+* Added: Gulp and Package (@ajitbohra)
 * Added: Communications Preference field.
 * Updated: Compaitibility with CampTix Indian Payments Phone field.
 
