@@ -36,7 +36,7 @@ Take payments in INR, LKR or USD through KDCpay using the CampTix plugin. CampTi
 * Added: Payment Title.
 * Added: Country field.
 * Fixed: Typos & VSCode formting.
-* Fixed: Comms Pref assignement.
+* Fixed: Comms Pref assignment.
 
 = 1.6.0 (2025-08-30) =
 * Added: Gulp and Package (@ajitbohra)
