@@ -54,7 +54,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method
 		$this->add_settings_field_helper('merchant_id', __('Merchant ID', 'camptix-kdcpay'), array($this, 'field_text'));
 		$this->add_settings_field_helper('merchant_key', __('Merchant Key', 'camptix-kdcpay'), array($this, 'field_text'));
 		$this->add_settings_field_helper('attendee_mobile_id', __('Mobile Field ID', 'camptix-kdcpay'), array($this, 'field_text'), __("To obtain the ID, view the form's source code and look for input name: `tix_attendee_questions[1][###]` correspondng to your Mobile field question. ### = Filed ID", 'camptix-kdcpay'));
-		$this->add_settings_field_helper('attendee_country_id', __('Country Field ID', 'camptix-kdcpay'), array($this, 'field_text'), __("To obtain the ID, view the form's source code and look for input name: `tix_attendee_questions[1][###]` correspondng to your Country field question. ### = Filed ID", 'camptix-kdcpay'));
+		$this->add_settings_field_helper('attendee_country_id_kdcpay', __('Country Field ID', 'camptix-kdcpay'), array($this, 'field_text'), __("To obtain the ID, view the form's source code and look for input name: `tix_attendee_questions[1][###]` correspondng to your Country field question. ### = Filed ID", 'camptix-kdcpay'));
 		$this->add_settings_field_helper('attendee_comms_id', __('Communication Field ID', 'camptix-kdcpay'), array($this, 'field_text'), __("To obtain the ID, view the form's source code and look for input name: `tix_attendee_questions[1][###]` correspondng to your Communication field question. ### = Filed ID", 'camptix-kdcpay'));
 		$this->add_settings_field_helper(
 			'iframe',
