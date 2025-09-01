@@ -85,8 +85,8 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method
 			$output['merchant_key'] = $input['merchant_key'];
 		if (isset($input['attendee_mobile_id']))
 			$output['attendee_mobile_id'] = $input['attendee_mobile_id'];
-		if (isset($input['attendee_country_id']))
-			$output['attendee_country_id'] = $input['attendee_country_id'];
+		if (isset($input['attendee_country_id_kdcpay']))
+			$output['attendee_country_id_kdcpay'] = $input['attendee_country_id_kdcpay'];
 		if (isset($input['attendee_comms_id']))
 			$output['attendee_comms_id'] = $input['attendee_comms_id'];
 		if (isset($input['iframe']))
@@ -223,7 +223,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method
 		$merchant_id = $this->options['merchant_id'];
 		$secret_key = $this->options['merchant_key'];
 		$attendee_mobile_id = $this->options['attendee_mobile_id'];
-		$attendee_country_id = $this->options['attendee_country_id'];
+		$attendee_country_id_kdcpay = $this->options['attendee_country_id_kdcpay'];
 		$attendee_comms_id = $this->options['attendee_comms_id'];
 		$event_name = ($this->camptix_options['event_name'] != "") ? $this->camptix_options['event_name'] : get_bloginfo('name');
 
@@ -268,8 +268,8 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method
 			}
 
 			// Get Country
-			if ($attendee_country_id != '') { // Check if Setup for Country is set?
-				$attendee_info_country = $attendee_questions[$attendee_country_id];
+			if ($attendee_country_id_kdcpay != '') { // Check if Setup for Country is set?
+				$attendee_info_country = $attendee_questions[$attendee_country_id_kdcpay];
 			} else {
 				$attendee_info_country = '';
 			}
