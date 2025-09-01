@@ -32,7 +32,8 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method
 	function camptix_init()
 	{
 		$this->options = array_merge(array(
-			'payment_url' => 'https://eduvents.co/camptix/',
+			'payment_title' => 'UPI / Cards / Netbanking',
+			'payment_url' => 'https://qtap.app/camptix/',
 			'merchant_id' => '',
 			'merchant_key' => '',
 			'attendee_mobile_id' => '',
@@ -41,6 +42,15 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method
 			'iframe' => true,
 			'sandbox' => true
 		), $this->get_payment_options());
+
+		/**
+			* Payment Title
+		 * Update the payment method title
+			*/
+		$payment_options = $this->options;
+		if (isset($payment_options['payment_title']) && $payment_options['payment_title'] != '') {
+			$this->name = $payment_options['payment_title'];
+		}
 
 		// IPN Listener
 		add_action('template_redirect', array($this, 'template_redirect'));
@@ -51,6 +61,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method
 		*/
 	function payment_settings_fields()
 	{
+		$this->add_settings_field_helper('payment_title', __('Payment Title', 'camptix-kdcpay'), array($this, 'field_text'));
 		$this->add_settings_field_helper('payment_url', __('Payment URL', 'camptix-kdcpay'), array($this, 'field_text'));
 		$this->add_settings_field_helper('merchant_id', __('Merchant ID', 'camptix-kdcpay'), array($this, 'field_text'));
 		$this->add_settings_field_helper('merchant_key', __('Merchant Key', 'camptix-kdcpay'), array($this, 'field_text'));
@@ -78,6 +89,8 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method
 	{
 		$output = $this->options;
 
+		if (isset($input['payment_title']))
+			$output['payment_title'] = $input['payment_title'];
 		if (isset($input['payment_url']))
 			$output['payment_url'] = $input['payment_url'];
 		if (isset($input['merchant_id']))
@@ -220,6 +233,7 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method
 			'tix_payment_method' => 'camptix_kdcpay',
 		), $this->get_tickets_url());
 
+		$payment_title = $this->options['payment_title'];
 		$payment_url = $this->options['payment_url'];
 		$merchant_id = $this->options['merchant_id'];
 		$secret_key = $this->options['merchant_key'];
