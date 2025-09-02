@@ -63,7 +63,12 @@ typings/
 # dotenv environment variables file
 .env
 
-
 ### Sass ###
 .sass-cache/
 *.css.map
+
+### MacOS
+.DS_Store
+
+gulpfile.js
+package.json

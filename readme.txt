@@ -4,17 +4,19 @@ Donate link: http://www.kdclabs.com/donate/
 Tags: camptix, kdcpay
 Requires at least: 3.5
 Tested up to: 6.8.2
-Stable tag: 1.6.1
+Stable tag: 1.6.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-KDCpay Payment Platform for CampTix plugin
+KDCpay Platform for CampTix plugin with WhatsApp Pay
 
 == Description ==
 
 KDCpay Payment Platform for the CampTix plugin.
 
-Take payments in INR, LKR or USD through KDCpay using the CampTix plugin. CampTix plugin needs to be installed and activated for the KDCpay payment platform to work.
+Take payments in INR, LKR or USD +114 currencies through KDCpay using the CampTix plugin. 
+Also India and Brazil can also use WhatsApp Native Payments. 
+CampTix plugin needs to be installed and activated for the KDCpay payment platform to work.
 
 == Installation ==
 
@@ -31,6 +33,10 @@ Take payments in INR, LKR or USD through KDCpay using the CampTix plugin. CampTi
 6. Visit: WP Dashbard > Camptix > Setup > Payments > KDCpay > Mobile Field ID > Enter the above noted ID.
 
 == Changelog ==
+
+= 1.6.2 (2025-09-02) =
+* Added: 114 currencies.
+* Added: WhatsApp Payment support.
 
 = 1.6.1 (2025-09-01) =
 * Added: Payment Title.

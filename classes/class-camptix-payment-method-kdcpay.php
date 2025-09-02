@@ -18,7 +18,17 @@ class CampTix_Payment_Method_KDCpay extends CampTix_Payment_Method
 	public $id = 'camptix_kdcpay';
 	public $name = 'KDCpay';
 	public $description = 'CampTix payment methods for Indian payment gateway KDCpay.';
-	public $supported_currencies = array('INR', 'LKR', 'USD');
+	public $supported_currencies = array('INR', 'LKR', 'USD', 'AED', 'ALL', 'AMD', 'ANG', 
+				'ARS', 'AUD', 'AWG', 'AZN', 'BAM', 'BBD', 'BDT', 'BGN', 'BIF', 'BMD', 'BND', 'BOB', 
+				'BRL', 'BSD', 'BWP', 'BZD', 'CAD', 'CHF', 'CLP', 'CNY', 'COP', 'CRC', 'CVE', 'CZK', 
+				'DJF', 'DKK', 'DOP', 'DZD', 'EGP', 'ETB', 'EUR', 'FJD', 'GBP', 'GIP', 'GMD', 'GNF', 
+				'GTQ', 'GYD', 'HKD', 'HNL', 'HRK', 'HTG', 'HUF', 'IDR', 'ILS', 'ISK', 'JMD', 'JPY', 
+				'KES', 'KGS', 'KHR', 'KMF', 'KRW', 'KYD', 'KZT', 'LAK', 'LRD', 'LSL', 'MAD', 'MDL', 
+				'MGA', 'MKD', 'MMK', 'MNT', 'MOP', 'MRO', 'MUR', 'MVR', 'MWK', 'MXN', 'MYR', 'MZN', 
+				'NAD', 'NGN', 'NIO', 'NOK', 'NZD', 'PEN', 'PGK', 'PHP', 'PLN', 'PYG', 'QAR', 'RON', 
+				'RSD', 'RUB', 'RWF', 'SAR', 'SCR', 'SEK', 'SGD', 'SZL', 'THB', 'TRY', 'TTD', 'TWD', 
+				'TZS', 'UAH', 'UGX', 'UYU', 'UZS', 'VND', 'VUV', 'XAF', 'XCD', 'XOF', 'XPF', 'YER', 
+				'ZAR', 'ZMW');
 
 	/**
 		* We can have an array to store our options.
